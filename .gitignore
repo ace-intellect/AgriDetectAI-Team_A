@@ -7,3 +7,4 @@ external_test_images/
 
 .env
 .DS_Store
+models/
