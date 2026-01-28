@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+
+raw_data/
+processed_data/
+external_test_images/
+
+.env
+.DS_Store
