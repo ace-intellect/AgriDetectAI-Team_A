@@ -10,14 +10,14 @@ def image_to_base64(image):
     return base64.b64encode(buffered.getvalue()).decode()
 
 def show(username):
-    # --- 1. DEFINE CSS (Doctor-Style Upload + Profile Styles) ---
+    # --- 1. DEFINE CSS ---
     st.markdown("""
 <style>
 /* ANIMATIONS */
 @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
 
-/* GLASS CARD STYLES */
+/* LEFT CARD STYLES */
 .profile-card {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     backdrop-filter: blur(20px);
@@ -27,27 +27,6 @@ def show(username):
     text-align: center;
     box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     animation: slideInLeft 0.8s ease-out;
-}
-
-/* DOCTOR-STYLE UPLOADER FOR PROFILE */
-[data-testid='stFileUploader'] section {
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    border: 2px dashed rgba(52, 211, 153, 0.5);
-    border-radius: 15px;
-    padding: 20px;
-    text-align: center;
-    transition: all 0.3s ease-in-out;
-}
-[data-testid='stFileUploader'] section:hover {
-    background-color: rgba(52, 211, 153, 0.1);
-    border-color: #34d399;
-    box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
-}
-[data-testid='stFileUploader'] button {
-    border: 1px solid #34d399;
-    color: #34d399;
-    border-radius: 50px;
 }
 
 /* AVATAR STYLES */
@@ -76,6 +55,15 @@ def show(username):
     object-fit: cover;
 }
 
+/* RIGHT PANEL STYLES (Applied to Streamlit Container) */
+[data-testid="stVerticalBlock"] > [style*="flex-direction: column;"] > [data-testid="stVerticalBlock"] {
+    /* This targets the inner container of the right column */
+    background-color: rgba(255, 255, 255, 0.05); 
+    border-radius: 24px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 /* BADGE & STATS */
 .badge-pro {
     background: #fbbf24;
@@ -98,14 +86,14 @@ def show(username):
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* RIGHT PANEL STYLES */
-.settings-panel {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 24px;
-    padding: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    height: 100%;
-    animation: slideInRight 1s ease-out;
+/* UPLOADER STYLE */
+[data-testid='stFileUploader'] section {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 2px dashed rgba(52, 211, 153, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
 }
 
 /* WIDGET OVERRIDES */
@@ -139,7 +127,7 @@ def show(username):
 
     # === LEFT COLUMN: PROFILE CARD ===
     with c1:
-        # 1. BEAUTIFUL GLASS UPLOADER (Doctor Style)
+        # 1. IMAGE UPLOAD WIDGET
         uploaded_avatar = st.file_uploader("Change Profile Picture", type=['jpg', 'png', 'jpeg'])
 
         # 2. LOGIC FOR AVATAR
@@ -150,7 +138,7 @@ def show(username):
             img_b64 = image_to_base64(image)
             inner_avatar_html = f'<img src="data:image/png;base64,{img_b64}" class="avatar-img">'
 
-        # 3. HTML STRING (FLUSH LEFT - NO INDENTATION)
+        # 3. HTML STRING (FLUSH LEFT)
         profile_html = f"""
 <div class="profile-card">
 <div class="badge-pro">PRO MEMBER</div>
@@ -181,41 +169,42 @@ def show(username):
 
     # === RIGHT COLUMN: SETTINGS ===
     with c2:
-        st.markdown('<div class="settings-panel">', unsafe_allow_html=True)
-        st.markdown("### ⚙️ Account Details")
-        
-        col_form1, col_form2 = st.columns(2)
-        with col_form1:
-            st.text_input("Full Name", value="Yeshwanth Ashala")
-            st.text_input("Email", value="yeshwanth@agridetect.com")
-        with col_form2:
-            st.text_input("Phone Number", value="+91 98765 43210")
-            st.selectbox("App Language", ["English", "Telugu (తెలుగు)", "Hindi (हिंदी)"])
+        # Using a container here to group elements visually if needed, 
+        # but the styling is handled by global CSS to avoid empty divs.
+        container = st.container()
+        with container:
+            st.markdown("### ⚙️ Account Details")
+            
+            col_form1, col_form2 = st.columns(2)
+            with col_form1:
+                st.text_input("Full Name", value="Yeshwanth Ashala")
+                st.text_input("Email", value="yeshwanth@agridetect.com")
+            with col_form2:
+                st.text_input("Phone Number", value="+91 98765 43210")
+                st.selectbox("App Language", ["English", "Telugu (తెలుగు)", "Hindi (हिंदी)"])
 
-        st.markdown("---")
-        
-        st.markdown("#### 🔔 Notification Preferences")
-        col_t1, col_t2 = st.columns(2)
-        with col_t1:
-            st.toggle("Email Alerts", value=True)
-            st.toggle("Whatsapp Updates", value=True)
-        with col_t2:
-            st.toggle("Dark Mode", value=True, disabled=True)
-            st.toggle("Share Analytics Data", value=False)
-        
-        st.write("")
-        st.write("")
-        
-        b1, b2, b3 = st.columns([1, 1, 1])
-        with b1:
-            st.markdown('<div class="action-btn">', unsafe_allow_html=True)
-            if st.button("💾 Save Changes"):
-                st.toast("Profile updated successfully!", icon="✅")
-            st.markdown('</div>', unsafe_allow_html=True)
-        
-        with b2:
-            st.markdown('<div class="action-btn">', unsafe_allow_html=True)
-            st.button("🔑 Change Pass")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown("---")
+            
+            st.markdown("#### 🔔 Notification Preferences")
+            col_t1, col_t2 = st.columns(2)
+            with col_t1:
+                st.toggle("Email Alerts", value=True)
+                st.toggle("Whatsapp Updates", value=True)
+            with col_t2:
+                st.toggle("Dark Mode", value=True, disabled=True)
+                st.toggle("Share Analytics Data", value=False)
+            
+            st.write("")
+            st.write("")
+            
+            b1, b2, b3 = st.columns([1, 1, 1])
+            with b1:
+                st.markdown('<div class="action-btn">', unsafe_allow_html=True)
+                if st.button("💾 Save Changes"):
+                    st.toast("Profile updated successfully!", icon="✅")
+                st.markdown('</div>', unsafe_allow_html=True)
+            
+            with b2:
+                st.markdown('<div class="action-btn">', unsafe_allow_html=True)
+                st.button("🔑 Change Pass")
+                st.markdown('</div>', unsafe_allow_html=True)
