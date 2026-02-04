@@ -1,169 +1,117 @@
- 
+# 🌱 AgriDetectAI – Multi-Crop Leaf Disease Detection System
+
+AgriDetectAI is an AI-powered web application designed to **detect plant leaf diseases and healthy conditions** across multiple crops using **deep learning and computer vision**.  
+The system integrates **four specialized models**, each trained to handle specific crop groups, ensuring higher accuracy and scalability.
 
 ---
 
-# AgriDetectAI: Rice & Potato Disease Classification
-
-**AgriDetectAI** is a deep learning project designed to classify diseases in rice and potato leaves. It utilizes a unified model approach, allowing users to upload leaf images without manually specifying the crop type, thereby improving usability and scalability.
-
-## 📌 Project Overview
-
-The core architecture of this project is based on **ResNet50**, a deep residual network pretrained on the ImageNet dataset. This model was chosen for its ability to mitigate the vanishing gradient problem and its effectiveness in learning fine-grained visual patterns such as leaf discoloration and lesions.
-
-* 
-**Primary Goal:** Accurate disease classification for rice and potato plants.
-
-
-* 
-**Total Classes:** 12 (including healthy and diseased conditions).
-
-
-* 
-**Model Accuracy:** 98%.
-
-
-
-## 📂 Dataset
-
-The dataset consists of images covering both healthy and diseased conditions for rice and potatoes. The data was cleaned to remove corrupted or duplicate images before training.
-
-### Classes
-
-The model classifies images into the following **12 categories**:
-
-| **Crop** | **Disease/Condition** |
-| --- | --- |
-| **Potato** | Bacteria, Fungi, Healthy, Nematode, Phytopthora, Virus |
-| **Rice** | Bacterial Leaf Blight, Brown Spot, Healthy, Leaf Blast, Leaf Scald, Sheath Blight |
-
-### Data Split Strategy
-
-To avoid data leakage and ensure reliable evaluation, the dataset was split as follows:
-
-* 
-**Training Set:** 70% 
-
-
-* 
-**Validation Set:** 15% 
-
-
-* 
-**Test Set:** 15% (Truly unseen data) 
-
-
-
-## 🏗️ Model Architecture
-
-The model uses a Transfer Learning approach with the following structure:
-
-* 
-**Backbone:** ResNet50 (Pretrained on ImageNet, top layers removed).
-
-
-* **Custom Classification Head:**
-* Global Average Pooling.
-
-
-* Dense Layer with ReLU activation.
-
-
-* Dropout Layer (to reduce overfitting).
-
-
-* Final Softmax Layer (for 12-class classification).
-
-
-
-
-
-## ⚙️ Training Strategy
-
-The training process was divided into two distinct phases to maximize performance.
-
-### Phase 1: Feature Extraction
-
-* 
-**Method:** All layers of the ResNet50 backbone were **frozen**.
-
-
-* 
-**Goal:** Train only the custom classification head to learn task-specific patterns while preserving pretrained features.
-
-
-
-### Phase 2: Fine-Tuning
-
-* 
-**Method:** Top layers of ResNet50 were **unfrozen**.
-
-
-* 
-**Goal:** Adapt high-level features specifically to rice and potato disease patterns using a lower learning rate.
-
-
-
-### Callbacks Used
-
-* 
-**Early Stopping:** To prevent overfitting.
-
-
-* 
-**ReduceLROnPlateau:** For stable convergence.
-
-
-* 
-**Model Checkpointing:** To save the best-performing model.
-
-
-
-## 📊 Performance & Results
-
-The model was evaluated using Accuracy, Precision, Recall, F1-score, and a Confusion Matrix.
-
-### Key Metrics
-
-* 
-**Overall Accuracy:** **98%**.
-
-
-* 
-**Macro Average F1-Score:** 0.98.
-
-
-* 
-**Performance:** High precision and recall were achieved across most classes, with minor performance drops only observed in visually similar diseases.
-
-
-
-### Visual Analysis
-
-* 
-**Accuracy & Loss Curves:** Training and validation accuracy increased steadily, while loss decreased consistently, indicating effective optimization with minimal overfitting.
-
-
-* 
-**Confusion Matrix:** Shows strong diagonal dominance, confirming correct predictions for the majority of samples.
-
-
-
-## 🧪 Qualitative Testing
-
-In addition to quantitative metrics, the model was tested on unseen images, including external images collected from online sources.
-
-* 
-**Results:** The model demonstrated logical disease identification with high confidence scores for correct predictions.
-
-
-* 
-**Generalization:** Validated effectiveness on real-world images.
-
-
-
-## 📝 Conclusion
-
-A single unified ResNet50-based model was successfully trained, demonstrating high accuracy and strong generalization across all 12 disease classes.
+## 🚀 Project Overview
+
+Agriculture faces significant losses due to late or incorrect disease identification.  
+AgriDetectAI addresses this challenge by providing:
+
+- 📸 Image-based leaf disease detection  
+- 🤖 Deep Learning models trained on crop-specific datasets  
+- 🌾 Support for multiple crops through modular model integration  
+- 🌐 User-friendly web interface for farmers and researchers  
 
 ---
+
+## 🌿 Supported Crops & Models
+
+AgriDetectAI integrates **4 independent deep learning models**, each responsible for a specific group of crops:
+
+### **Model 1: Rice & Potato**
+- Rice Leaf Diseases
+- Potato Leaf Diseases
+- Healthy Leaf Classification
+
+### **Model 2: Corn & Blackgram**
+- Corn (Maize) Leaf Diseases
+- Blackgram Leaf Diseases
+- Healthy Leaf Classification
+
+### **Model 3: Cotton & Tomato**
+- Cotton Leaf Diseases
+- Tomato Leaf Diseases
+- Healthy Leaf Classification
+
+### **Model 4: Pumpkin & Wheat**
+- Pumpkin Leaf Diseases
+- Wheat Leaf Diseases
+- Healthy Leaf Classification
+
+Each model is optimized to distinguish between **multiple disease classes and healthy leaves** for the assigned crops.
+
+---
+
+## 🧠 Technology Stack
+
+- **Programming Language:** Python  
+- **Deep Learning Framework:** TensorFlow / Keras  
+- **Model Architecture:** CNN / Transfer Learning  
+- **Web Framework:** Streamlit  
+- **Version Control:** Git & GitHub  
+
+---
+
+## ⚙️ System Architecture
+
+1. User uploads a leaf image through the web interface  
+2. Selected crop group determines the appropriate model  
+3. Image preprocessing is applied (resize, normalization)  
+4. Deep learning model predicts disease or healthy status  
+5. Result is displayed with confidence score  
+
+---
+
+## 📦 Key Features
+
+- Multi-model architecture for better accuracy  
+- Modular and scalable design  
+- Simple and clean UI for non-technical users  
+- Fast prediction with real-time feedback  
+- Easy integration of new crops and models  
+
+---
+
+
+---
+
+## 🎯 Use Cases
+
+- Farmers for early disease detection  
+- Agricultural researchers  
+- Smart farming applications  
+- Educational and academic projects  
+
+---
+
+## 🔮 Future Enhancements
+
+- Add more crop varieties  
+- Mobile app integration  
+- Disease treatment recommendations  
+- Multilingual support  
+- Cloud-based deployment  
+
+---
+
+## 👥 Team & Collaboration
+
+This project was developed collaboratively with each team member contributing to:
+- Model development
+- Web application integration
+- UI/UX design
+- Deployment & testing
+
+---
+
+## 📜 License
+
+This project is intended for **educational and research purposes**.
+
+---
+
+🌱 *AgriDetectAI – Empowering Agriculture with Artificial Intelligence*
 
